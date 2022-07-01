@@ -18,6 +18,8 @@ let role=new Role(connection,"role");
 let employee=new Employee(connection,"employee");
 
 
+/*Prompt Modules and Questions for the main menu */
+
 const prompt=inquirer.createPromptModule();
 let listQuestion=
 [
@@ -32,6 +34,8 @@ let listQuestion=
 ];
 
 
+/*Prompt Modules and Questions for Adding the Department*/
+
 const addDepartmentPrompt=inquirer.createPromptModule();
 let addDepQuestion=[
 
@@ -43,7 +47,7 @@ let addDepQuestion=[
 
 ]
 
-/*enter the name, salary, and department for the role and that role is added to the database */
+/*Prompt Modules and Questions for Adding the Role*/
 
 const addRolePrompt=inquirer.createPromptModule();
 let addRoleQuestion=[
@@ -78,7 +82,8 @@ async function viewDepartments(){
 
 
 
-/*employee’s first name, last name, role, and manager */
+/*Prompt Modules and Questions for Adding the Employee*/
+
 const addEmployeePrompt=inquirer.createPromptModule();
 let addEmployeeQuestion=[
   {
@@ -101,7 +106,7 @@ let addEmployeeQuestion=[
     type:"list",
     message:"Who is the employee's manager ? ",
     name:"managerName",
-    choices:viewManagers
+    choices:viewEmployees
   }
 
 
@@ -116,7 +121,7 @@ async function viewRoles(){
 
 }
 
-async function viewManagers(){
+async function viewEmployees(){
 
   const[rows,fields]= await employee.viewAll();
   let managerNames=[]
@@ -131,9 +136,10 @@ const updateEmployeePrompt=inquirer.createPromptModule();
 let updateEmployeeQuestion=[
   
   {
-    type:"input",
+    type:"list",
     message:"Which employee's role do you want to update ? ",
-    name:"employeeName"
+    name:"employeeName",
+    choices:viewEmployees
   },
   {
     type:"list",
@@ -219,13 +225,19 @@ function displayMenu(){
           updateEmployeePrompt(updateEmployeeQuestion)
           .then(
             newRow=>{
-            let value=[newRow.employeeName,newRow.roleList];
-            choicesHandler(employee,"update",value);
+
+            choicesHandler(employee,"update",newRow);
             }
           )
           .catch(e=>console.error(e))
 
 
+        }
+        else{
+          console.log('\n');
+          console.log("********* Exiting the Application **********");
+          console.log('\n');
+          return;
         }
           
         }
@@ -308,6 +320,22 @@ function displayMenu(){
           
           
            
+       }
+       else if(action==="update"){
+        
+        console.log(newRow);
+        const {employeeName,roleList}=newRow;
+
+        tableName.updateEmployeeByRole(employeeName,roleList)
+        .then(
+          result=>{
+          console.log("\n");
+          console.log(
+            `Updated  employee ${employeeName}role to ${roleList} in ${tableName}.`);
+          console.log("\n");
+          displayMenu();
+       })
+       .catch(e=>console.log(e))
        }
 
 
