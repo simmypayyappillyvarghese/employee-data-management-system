@@ -1,10 +1,8 @@
 
-
 const inquirer=require('inquirer');
 
-const Department=require('./lib/Department.js');
-const Role=require('./lib/Role.js');
-const Employee=require('./lib/Employee.js');
+
+//Declaring the database connection
 
 const connection=
     {
@@ -14,15 +12,18 @@ const connection=
         password:"Simmy@88"
     }
 
+
+//Used Classes to organize the respective Table Methods
+
+const Department=require('./lib/Department.js');
+const Role=require('./lib/Role.js');
+const Employee=require('./lib/Employee.js');
+
+ 
+    //Instantiating the table classes 
 let department=new Department(connection,"department");
 let role=new Role(connection,"role");
 let employee=new Employee(connection,"employee");
-
-
-
-
-
-
 
 
 /*Prompt Modules and Questions for the main menu */
@@ -91,7 +92,7 @@ let employee=new Employee(connection,"employee");
   },
   {
     type:"input",
-    message:"What is the employee's last name ? ",
+    message:"What is the employee's last name (If there is more)? ",
     name:"lastName"
   },
   {
@@ -162,10 +163,11 @@ async function viewEmployees(){
 
     const[rows,fields]= await employee.viewAll();
     let managerNames=[]
-    rows.forEach((row)=>managerNames.push(row.first_name+" "+row.last_name))
+    rows.forEach((row)=>managerNames.push(row.first_name+"\t"+row.last_name))
     return managerNames;
   }
 
+  
   module.exports = { prompt,listQuestion,addEmployeePrompt,addEmployeeQuestion,
                      addDepartmentPrompt,addDepQuestion,addRolePrompt,addRoleQuestion,
                      updateEmployeePrompt,updateEmployeeQuestion,

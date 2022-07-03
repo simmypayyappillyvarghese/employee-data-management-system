@@ -1,3 +1,5 @@
+/* SEED file to insert data to the  tables*/
+
 INSERT INTO department(name)
 VALUES
 ("Sales"),                       ---1

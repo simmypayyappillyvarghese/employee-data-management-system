@@ -6,6 +6,8 @@ const mysql=require('mysql2');
 const cTable = require('console.table');
 
 
+/* Based on the answer chosen by the user from the choice list,choicehandler
+is executed with table object and action to be performed */
 
 function displayMenu(){
 
@@ -74,6 +76,7 @@ function displayMenu(){
         .then(
           newRow=>{
 
+          console.log("Inside if-else",newRow);  
           choicesHandler(exp.employee,"update",newRow);
           }
         )
@@ -99,10 +102,11 @@ function displayMenu(){
 }
 
 
+/* Function will call the table instance methods based on the action passed to it 
+and print tge data in tabular format */
 
 async function choicesHandler(tableName,action,newRow=""){
 
-      
 
   if(action==="view")
   {
@@ -175,6 +179,7 @@ async function choicesHandler(tableName,action,newRow=""){
    console.log(newRow);
    const {employeeName,roleList}=newRow;
 
+   console.log("After Destructuring: ",employeeName,roleList);
    tableName.updateEmployeeByRole(employeeName,roleList)
    .then(
      result=>{
@@ -192,18 +197,7 @@ async function choicesHandler(tableName,action,newRow=""){
 
 
 
-
-
-
-
-
-  
-  
-   
-
-
-
-
+/* Starting Point of the Application */
 function startApp(){
 
     console.log("\n");

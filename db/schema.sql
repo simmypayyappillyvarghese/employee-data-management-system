@@ -1,3 +1,6 @@
+/* SCHEMA file to create the tables and database*/
+
+
 DROP DATABASE IF EXISTS employee_db;
 CREATE DATABASE employee_db;
 
