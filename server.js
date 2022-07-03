@@ -26,6 +26,21 @@ function displayMenu(){
         else if(answers.choiceList=="View All Employees"){
           choicesHandler(exp.employee,"view-combined");
         }
+        
+        else if(answers.choiceList=="View Employees By The Manager"){
+
+         exp.viewEmployeeByManagerPrompt(exp.viewEmpByManagerQuestion)
+         .then(
+
+          newRow=>{
+            let managerName=newRow.managerNameList;
+            choicesHandler(exp.employee,"viewEmpByManager",managerName);
+          }
+         )
+         .catch(e=>console.log(e));
+
+
+        }
         else if(answers.choiceList=="Add a Department"){
           
           exp.addDepartmentPrompt(exp.addDepQuestion)
@@ -75,8 +90,7 @@ function displayMenu(){
         exp.updateEmployeePrompt(exp.updateEmployeeQuestion)
         .then(
           newRow=>{
-
-          console.log("Inside if-else",newRow);  
+ 
           choicesHandler(exp.employee,"update",newRow);
           }
         )
@@ -119,9 +133,7 @@ async function choicesHandler(tableName,action,newRow=""){
      .then(  ([rows,fields])=>
                {
                  console.table(rows)
-                 
-               
-
+  
                displayMenu();}
            );
      
@@ -149,6 +161,20 @@ async function choicesHandler(tableName,action,newRow=""){
    displayMenu();
   }
 
+  else if(action==="viewEmpByManager"){
+    try{
+
+     const [rows,fields] =await tableName.viewEmployeesByManagerName(newRow);
+     console.log("\n");
+     console.table(rows);
+     console.log("\n");
+
+    } catch(err){
+      console.log(err);
+     } 
+     displayMenu();
+    
+  }
   else if(action==="add"){
    
      
@@ -176,10 +202,9 @@ async function choicesHandler(tableName,action,newRow=""){
   }
   else if(action==="update"){
    
-   console.log(newRow);
+
    const {employeeName,roleList}=newRow;
 
-   console.log("After Destructuring: ",employeeName,roleList);
    tableName.updateEmployeeByRole(employeeName,roleList)
    .then(
      result=>{

@@ -35,7 +35,7 @@ let employee=new Employee(connection,"employee");
         type:'list',
         message:'What would you like to do ?',
         name:'choiceList',
-        choices:["View All Departments","View All Roles","View All Employees",
+        choices:["View All Departments","View All Roles","View All Employees","View Employees By The Manager",
                  "Add a Department","Add a Role","Add an Employee"
                  ,"Update an Employee Role","Quit"]
     }
@@ -92,7 +92,7 @@ let employee=new Employee(connection,"employee");
   },
   {
     type:"input",
-    message:"What is the employee's last name (If there is more)? ",
+    message:"What is the employee's last name? ",
     name:"lastName"
   },
   {
@@ -129,10 +129,23 @@ let employee=new Employee(connection,"employee");
     message:"Which role do you want to assign the selected employee ? ",
     name:"roleList",
     choices:viewRoles
-  },
+  }
 
 ];
 
+
+/* Prompt module and queries for viewing employees by the manager*/
+
+const viewEmployeeByManagerPrompt=inquirer.createPromptModule();
+let viewEmpByManagerQuestion=[
+
+  {
+    type:"list",
+    message:"Choose the manager to view their employees: ",
+    name:"managerNameList",
+    choices:viewManagers
+  }
+];
 
 
 /*Below Functions return the data from the table to be displayed as choice list for the prompt */
@@ -162,13 +175,24 @@ async function viewRoles(){
 async function viewEmployees(){
 
     const[rows,fields]= await employee.viewAll();
+    let employeeNames=[]
+    rows.forEach((row)=>employeeNames.push(row.first_name+"\t"+row.last_name))
+    return employeeNames;
+  }
+
+
+  async function viewManagers(){
+
+    const[rows,fields]= await employee.viewAll();
     let managerNames=[]
     rows.forEach((row)=>managerNames.push(row.first_name+"\t"+row.last_name))
     return managerNames;
+   
+     
   }
 
-  
+
   module.exports = { prompt,listQuestion,addEmployeePrompt,addEmployeeQuestion,
                      addDepartmentPrompt,addDepQuestion,addRolePrompt,addRoleQuestion,
                      updateEmployeePrompt,updateEmployeeQuestion,
-                     employee,role,department}
+                     employee,role,department,viewEmployeeByManagerPrompt,viewEmpByManagerQuestion}
